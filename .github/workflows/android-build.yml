@@ -1,45 +1,56 @@
-name: Build APK
+name: Build Atlasya Weather APK and AAB
 
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.24.5'
+          channel: stable
+          cache: true
+
+      - name: Show Flutter version
+        run: flutter --version
+
+      - name: Recreate Android project cleanly
+        run: |
+          rm -rf android ios linux macos windows web test
+          flutter create -t app --platforms=android --org com.atlasyabilisim .
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build APK
+      - name: Build release APK
         run: flutter build apk --release
 
-      - name: Build AAB
+      - name: Build release AAB
         run: flutter build appbundle --release
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-apk
+          name: atlasya-weather-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
-      - name: Upload AAB
+      - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-aab
+          name: atlasya-weather-release-aab
           path: build/app/outputs/bundle/release/app-release.aab

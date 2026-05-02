@@ -1,30 +1,27 @@
-# Atlasya Weather - GitHub Build Rehberi
+# GitHub Actions Build Rehberi
 
-## GitHub'a yüklerken mutlaka gönderilecekler
+Bu paket, bilgisayarında Flutter veya Android SDK çalışmadan APK/AAB üretmek için hazırlandı.
 
-- `lib/`
-- `pubspec.yaml`
-- `.github/workflows/build-android.yml`
-- `README.md`
-- `GITHUB_BUILD_GUIDE.md`
+## Yükleme
 
-`android/` klasörü zipte yoksa sorun değil. GitHub Actions içinde otomatik oluşturulur.
+GitHub reposunda:
 
-## APK/AAB alma
+1. Add file > Upload files
+2. Bu zip'in içindeki tüm dosya ve klasörleri yükle
+3. Commit changes
 
-1. GitHub repo içinde dosyaları yükle ve `Commit changes` bas.
-2. Üst menüden `Actions` sekmesine gir.
-3. `Build Android APK and AAB` workflow'una tıkla.
-4. Build bitince en alttaki `Artifacts` bölümünden indir:
-   - `AtlasyaWeather-release-apk` → telefona kurmak için APK
-   - `AtlasyaWeather-playstore-aab` → Play Store için AAB
+## Build
 
-## .github görünmezse
+Actions sekmesine gir. Build otomatik başlar. Başlamazsa:
 
-Windows bazen nokta ile başlayan klasörleri garip gösterebilir. Repo içinde `.github/workflows/build-android.yml` yoksa:
+1. Actions > Build Atlasya Weather APK and AAB
+2. Run workflow
 
-1. Repo'da `Add file > Create new file` seç.
-2. Dosya adı olarak şunu yaz:
-   `.github/workflows/build-android.yml`
-3. Bu zip içindeki `GITHUB_ACTIONS_BACKUP/build-android.yml` dosyasının içeriğini kopyalayıp yapıştır.
-4. `Commit changes` bas.
+## İndirme
+
+Build başarılı olunca en altta Artifacts çıkar:
+
+- AtlasyaWeather-release-apk
+- AtlasyaWeather-playstore-aab
+
+APK telefona kurmak içindir. AAB Play Store içindir.

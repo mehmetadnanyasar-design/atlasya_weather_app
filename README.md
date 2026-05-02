@@ -1,16 +1,16 @@
-# Atlasya Weather App
+# Atlasya Weather
 
-Android için Flutter tabanlı modern hava durumu uygulaması.
+Modern Flutter tabanlı Android hava durumu uygulaması.
 
-## Özellikler
+## GitHub ile APK/AAB üretme
 
-- Şehir arama
-- Anlık hava durumu
-- 24 saatlik tahmin
-- 7 günlük tahmin
-- Open-Meteo API, API key gerekmez
-- GitHub Actions ile bulutta APK ve AAB üretimi
+1. Bu zip içindeki dosyaları GitHub reposuna yükle.
+2. Özellikle `.github/workflows/build-android.yml` dosyasının yüklendiğinden emin ol.
+3. GitHub > Actions sekmesine gir.
+4. Build bitince sayfanın altında Artifacts bölümünden indir:
+   - `AtlasyaWeather-release-apk`
+   - `AtlasyaWeather-playstore-aab`
 
-## Build
+## Uygulama adı
 
-GitHub'a yükledikten sonra Actions sekmesinden otomatik APK/AAB alınır.
+Atlasya Weather

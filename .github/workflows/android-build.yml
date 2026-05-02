@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
 
       - name: Setup Flutter
@@ -24,31 +24,9 @@ jobs:
         with:
           flutter-version: '3.24.5'
 
-      - name: Create clean Flutter project
-        run: |
-          rm -rf android ios linux macos windows web test
-          flutter create -t app --project-name atlasya_weather_app .
-
-      - name: Fix Android Manifest
-        run: |
-          cat > android/app/src/main/AndroidManifest.xml <<EOF
-          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-              <uses-permission android:name="android.permission.INTERNET"/>
-              <application
-                  android:label="Atlasya Weather"
-                  android:icon="@mipmap/ic_launcher"
-                  android:usesCleartextTraffic="true">
-                  <activity
-                      android:name=".MainActivity"
-                      android:exported="true">
-                      <intent-filter>
-                          <action android:name="android.intent.action.MAIN"/>
-                          <category android:name="android.intent.category.LAUNCHER"/>
-                      </intent-filter>
-                  </activity>
-              </application>
-          </manifest>
-          EOF
+     
+      - name: Ensure Android project exists
+        run: flutter create .
 
       - name: Install dependencies
         run: flutter pub get

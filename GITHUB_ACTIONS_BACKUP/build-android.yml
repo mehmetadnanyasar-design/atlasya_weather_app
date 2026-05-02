@@ -1,0 +1,53 @@
+name: Build Android APK and AAB
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.3'
+          channel: stable
+          cache: true
+
+      - name: Create Android platform files if missing
+        run: flutter create --platforms=android --org com.atlasya --project-name atlasya_weather_app .
+
+      - name: Set Android app label
+        run: |
+          if [ -f android/app/src/main/AndroidManifest.xml ]; then
+            sed -i 's/android:label="[^"]*"/android:label="Atlasya Weather"/' android/app/src/main/AndroidManifest.xml
+          fi
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze project
+        run: flutter analyze
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Build release AAB for Play Store
+        run: flutter build appbundle --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AtlasyaWeather-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AtlasyaWeather-playstore-aab
+          path: build/app/outputs/bundle/release/app-release.aab

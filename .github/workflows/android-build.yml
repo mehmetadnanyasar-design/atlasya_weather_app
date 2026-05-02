@@ -29,10 +29,10 @@ jobs:
       - name: Show Flutter version
         run: flutter --version
 
-      - name: Recreate Android project cleanly
-        run: |
-          rm -rf android ios linux macos windows web test
-          flutter create -t app --platforms=android --org com.atlasyabilisim .
+     - name: Recreate Flutter Android project
+  run: |
+    rm -rf android ios linux macos windows web test
+    flutter create -t app --project-name atlasya_weather_app 
 
       - name: Install dependencies
         run: flutter pub get

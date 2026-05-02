@@ -24,9 +24,28 @@ jobs:
         with:
           flutter-version: '3.24.5'
 
-     
-      - name: Ensure Android project exists
-        run: flutter create .
+      - name: Create Android project
+        run: flutter create --project-name atlasya_weather_app .
+
+      - name: Add internet permission
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
+          text = manifest.read_text()
+
+          if '<uses-permission android:name="android.permission.INTERNET"/>' not in text:
+              text = text.replace(
+                  '<manifest xmlns:android="http://schemas.android.com/apk/res/android">',
+                  '<manifest xmlns:android="http://schemas.android.com/apk/res/android">\n    <uses-permission android:name="android.permission.INTERNET"/>'
+              )
+
+          manifest.write_text(text)
+          PY
+
+      - name: Show manifest
+        run: cat android/app/src/main/AndroidManifest.xml
 
       - name: Install dependencies
         run: flutter pub get
@@ -37,5 +56,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: atlasya_apk
+          name: atlasya-apk
           path: build/app/outputs/flutter-apk/app-release.apk

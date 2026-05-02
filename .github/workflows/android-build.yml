@@ -1,8 +1,8 @@
-name: Build Atlasya Weather APK and AAB
+name: Build Atlasya Weather APK
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
@@ -10,61 +10,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.5'
-          channel: stable
-          cache: true
 
-      - name: Show Flutter version
-        run: flutter --version
-
-      - name: Recreate Flutter Android project
+      - name: Create clean Flutter project
         run: |
           rm -rf android ios linux macos windows web test
           flutter create -t app --project-name atlasya_weather_app .
 
-       - name: Fix Android Manifest
+      - name: Fix Android Manifest
         run: |
-          cat > android/app/src/main/AndroidManifest.xml <<'EOF'
+          cat > android/app/src/main/AndroidManifest.xml <<EOF
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
               <uses-permission android:name="android.permission.INTERNET"/>
-
               <application
                   android:label="Atlasya Weather"
-                  android:name="${applicationName}"
                   android:icon="@mipmap/ic_launcher"
                   android:usesCleartextTraffic="true">
                   <activity
                       android:name=".MainActivity"
-                      android:exported="true"
-                      android:launchMode="singleTop"
-                      android:theme="@style/LaunchTheme"
-                      android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-                      android:hardwareAccelerated="true"
-                      android:windowSoftInputMode="adjustResize">
-                      <meta-data
-                          android:name="io.flutter.embedding.android.NormalTheme"
-                          android:resource="@style/NormalTheme" />
+                      android:exported="true">
                       <intent-filter>
                           <action android:name="android.intent.action.MAIN"/>
                           <category android:name="android.intent.category.LAUNCHER"/>
                       </intent-filter>
                   </activity>
-
-                  <meta-data
-                      android:name="flutterEmbedding"
-                      android:value="2" />
               </application>
           </manifest>
           EOF
@@ -72,20 +53,11 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build release APK
+      - name: Build APK
         run: flutter build apk --release
 
-      - name: Build release AAB
-        run: flutter build appbundle --release
-
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: atlasya-weather-release-apk
+          name: atlasya-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-
-      - name: Upload AAB artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: atlasya-weather-release-aab
-          path: build/app/outputs/bundle/release/app-release.aab
